@@ -1,6 +1,6 @@
 import React from 'react';
 import { RoomData } from '../types';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Users, Maximize, Check } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -105,6 +105,12 @@ const roomDatabase: RoomData[] = [
 
 const Rooms: React.FC = () => {
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleBookRoom = (roomName: string) => {
+    // Navigate to booking page and pass the selected room name in state
+    navigate('/booking', { state: { selectedRoom: roomName } });
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50 pt-10 pb-20">
@@ -156,12 +162,12 @@ const Rooms: React.FC = () => {
                   </div>
 
                   <div className="mt-auto pt-6 border-t border-neutral-100">
-                    <Link 
-                      to="/booking" 
+                    <button 
+                      onClick={() => handleBookRoom(room.nameEn)} // We pass the English name to keep ID consistent across languages for now
                       className="block w-full text-center bg-neutral-900 text-white py-3 uppercase text-sm tracking-widest hover:bg-gold-600 transition-colors"
                     >
                       {t.rooms.book_btn}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
