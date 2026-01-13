@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Calendar, Users, CheckCircle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const Booking: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const location = useLocation();
+  
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // State for form fields
+  const [roomType, setRoomType] = useState('Standard Cozy Room');
+
+  // Effect to handle passed state from Rooms page
+  useEffect(() => {
+    if (location.state && location.state.selectedRoom) {
+      setRoomType(location.state.selectedRoom);
+    }
+  }, [location.state]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +43,10 @@ const Booking: React.FC = () => {
           <p className="text-neutral-500 text-lg mb-8">
             {t.booking.success_msg}
           </p>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-neutral-100 mb-6 text-left">
+             <p className="text-sm text-neutral-500">Booked Room:</p>
+             <p className="font-serif text-lg text-gold-600">{roomType}</p>
+          </div>
           <button 
             onClick={() => setStep(1)}
             className="text-gold-600 font-semibold hover:text-gold-700 underline underline-offset-4"
@@ -81,13 +98,19 @@ const Booking: React.FC = () => {
               {/* Room Type */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">{t.booking.room_pref}</label>
-                <select className="w-full p-3 border border-neutral-200 rounded focus:ring-1 focus:ring-gold-500 outline-none bg-white">
-                  <option>Standard Cozy Room</option>
-                  <option>Superior Twin Room</option>
-                  <option>Deluxe King Room</option>
-                  <option>Family Studio</option>
-                  <option>Executive Garden Suite</option>
-                  <option>Royal Ocean Penthouse</option>
+                <select 
+                  value={roomType}
+                  onChange={(e) => setRoomType(e.target.value)}
+                  className="w-full p-3 border border-neutral-200 rounded focus:ring-1 focus:ring-gold-500 outline-none bg-white"
+                >
+                  <option value="Standard Cozy Room">Standard Cozy Room</option>
+                  <option value="Superior Twin Room">Superior Twin Room</option>
+                  <option value="Deluxe King Room">Deluxe King Room</option>
+                  <option value="Family Studio">Family Studio</option>
+                  <option value="Executive Garden Suite">Executive Garden Suite</option>
+                  <option value="Junior Suite">Junior Suite</option>
+                  <option value="Royal Ocean Penthouse">Royal Ocean Penthouse</option>
+                  <option value="The RichChoi Presidential">The RichChoi Presidential</option>
                 </select>
               </div>
 
